@@ -9,8 +9,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "events")
@@ -22,6 +20,10 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private List<Ticket> tickets;
+
+    @ManyToOne
+    @JoinColumn(name = "event_organizer_id")
+    private EventOrganizer eventOrganizer;
 
     private String eventName;
     private String eventDescription;

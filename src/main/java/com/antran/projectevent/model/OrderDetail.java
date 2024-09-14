@@ -8,8 +8,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "order_details")
