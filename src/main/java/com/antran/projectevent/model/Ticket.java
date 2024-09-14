@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +21,9 @@ public class Ticket {
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
+
+    @OneToMany(mappedBy = "ticket")
+    private List<OrderDetail> orderDetails;
 
     private String ticketName;
     private String ticketType;

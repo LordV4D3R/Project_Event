@@ -12,30 +12,27 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "feedbacks")
-public class Feedback {
+@Table(name = "order_details")
+public class OrderDetail {
     private @Id @GeneratedValue UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket;
 
     @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    private String content;
-    private int starRating;
     private Date createOn;
+    private int quantity;
+    private double price;
 
-    private feedbackStatus feedbackStatus;
+    private orderStatus orderStatus;
 
-    public enum feedbackStatus {
+    public enum orderStatus {
         ACTIVE,
         INACTIVE
     }
-
-
-
 
 }

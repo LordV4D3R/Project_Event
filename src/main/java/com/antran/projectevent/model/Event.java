@@ -17,11 +17,11 @@ import java.util.UUID;
 public class Event {
     private @Id @GeneratedValue UUID id;
 
-    @OneToMany
-    private List<Feedback> feedback;
+    @OneToMany(mappedBy = "event")
+    private List<Feedback> feedbacks;
 
-    @OneToMany
-    private List<Ticket> ticket;
+    @OneToMany(mappedBy = "event")
+    private List<Ticket> tickets;
 
     private String eventName;
     private String eventDescription;

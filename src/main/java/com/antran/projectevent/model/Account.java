@@ -16,8 +16,11 @@ import java.util.UUID;
 public class Account {
     private @Id @GeneratedValue UUID id;
 
-    @OneToMany
-    private List<Feedback> feedback;
+    @OneToMany(mappedBy = "account")
+    private List<Feedback> feedbacks;
+
+    @OneToMany(mappedBy = "account")
+    private List<Order> orders;
 
     private String username;
     private String password;
@@ -30,6 +33,7 @@ public class Account {
 
     private systemRole systemRole;
     private accountStatus accountStatus;
+
     public enum systemRole {
         ADMIN,
         MEMBER,

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,30 +13,26 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "feedbacks")
-public class Feedback {
+@Table(name = "orders")
+public class Order {
     private @Id @GeneratedValue UUID id;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @ManyToOne
-    @JoinColumn(name = "event_id")
-    private Event event;
-
-    private String content;
-    private int starRating;
     private Date createOn;
+    private Date updateOn;
+    private int totalQuantity;
+    private double totalPrice;
 
-    private feedbackStatus feedbackStatus;
+    private orderStatus orderStatus;
 
-    public enum feedbackStatus {
+    public enum orderStatus {
         ACTIVE,
         INACTIVE
     }
-
-
-
-
 }
