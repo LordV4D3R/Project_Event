@@ -3,6 +3,8 @@ package com.antran.projectevent.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +27,8 @@ public class Account {
     private String mainEmail;
     private String fullName;
     private String mainPhoneNumber;
-    private String birthDate;
-    private String sex;
+    private LocalDate birthDate;
+    private sex sex;
     private String mainAddress;
 
     private systemRole systemRole;
@@ -34,13 +36,32 @@ public class Account {
 
     public enum systemRole {
         ADMIN,
-        MEMBER,
-        CUSTOMER,
-        EVENT_ORGANIZER
+        MEMBER
     }
     public enum accountStatus {
         ACTIVE,
         INACTIVE
+    }
+    public enum sex {
+        MALE,
+        FEMALE,
+        OTHER
+    }
+
+    public Account(String username, String password, String mainEmail, String fullName, String mainPhoneNumber, LocalDate birth,
+                   sex sex, String mainAddress, systemRole systemRole, accountStatus accountStatus, List<Feedback> feedbacks, List<Order> orders) {
+        this.username = username;
+        this.password = password;
+        this.mainEmail = mainEmail;
+        this.fullName = fullName;
+        this.mainPhoneNumber = mainPhoneNumber;
+        this.birthDate = birth;
+        this.sex = sex;
+        this.mainAddress = mainAddress;
+        this.systemRole = systemRole;
+        this.accountStatus = accountStatus;
+        this.feedbacks = feedbacks;
+        this.orders = orders;
     }
 
 }

@@ -23,19 +23,25 @@ public class AccountController {
 
     //Get user by id
     @GetMapping("/{id}")
-    private Account getAccountById(UUID id) {
+    public Account getAccountById(@PathVariable UUID id) {
         return accountService.getAccountById(id);
     }
 
     //Add new user
     @PostMapping
-    public Account addAccount(Account account) {
+    public Account addAccount(@RequestBody Account account) {
         return accountService.addAccount(account);
+    }
+
+    //Update user by id
+    @PutMapping("/{id}")
+    public Account updateAccountById(@PathVariable UUID id, @RequestBody Account account) {
+        return accountService.updateAccountById(id, account);
     }
 
     //Delete user by id
     @DeleteMapping("/{id}")
-    public void deleteAccountById(UUID id) {
+    public void deleteAccountById(@PathVariable UUID id) {
         accountService.deleteAccountById(id);
     }
 

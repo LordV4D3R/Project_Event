@@ -2,6 +2,7 @@ package com.antran.projectevent.service;
 
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.repository.AccountRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,14 @@ public class AccountService {
     //Get account by id
     public Account getAccountById(UUID id) {
         return accountRepository.findById(id).orElse(null);
+    }
+
+    //Update account by id
+    public Account updateAccountById(UUID id, Account updateAccount) {
+        return accountRepository.findById(id).map(existingAccount -> {
+            BeanUtils.copyProperties(updateAccount, existingAccount, "id", "feedbacks", "orders");
+            return accountRepository.save(existingAccount);
+        }).orElse(null);
     }
 
     //Add new account
