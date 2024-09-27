@@ -1,5 +1,6 @@
 package com.antran.projectevent.service;
 
+import com.antran.projectevent.exception.ResourceNotFoundException;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.repository.AccountRepository;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
@@ -23,7 +24,8 @@ public class AccountService implements IAccountService {
 
     //Get account by id
     public Account getAccountById(UUID id) {
-        return accountRepository.findById(id).orElse(null);
+        return accountRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Account not found with id " + id));
     }
 
     //Update account by id
