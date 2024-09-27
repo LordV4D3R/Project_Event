@@ -1,0 +1,30 @@
+[
+  {
+    "feedbacks": [],
+    "orders": [],
+    "username": "an123",
+    "password": "12345",
+    "mainEmail": "an@gmail.com",
+    "fullName": "An",
+    "mainPhoneNumber": "0909090909",
+    "birthDate": "31/12/2000",
+    "sex": "MALE",
+    "mainAddress": "123 Washiton",
+    "systemRole": "ADMIN",
+    "accountStatus": "ACTIVE"
+  },
+  {
+    "feedbacks": [],
+    "orders": [],
+    "username": "na123",
+    "password": "12345",
+    "mainEmail": "na@gmail.com",
+    "fullName": "Nhut Anh",
+    "mainPhoneNumber": "0987654321",
+    "birthDate": "31/12/2002",
+    "sex": "MALE",
+    "mainAddress": "123 Washiton",
+    "systemRole": "MEMBER",
+    "accountStatus": "ACTIVE"
+  }
+]

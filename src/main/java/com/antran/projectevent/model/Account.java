@@ -48,20 +48,4 @@ public class Account {
         OTHER
     }
 
-    public Account(String username, String password, String mainEmail, String fullName, String mainPhoneNumber, LocalDate birth,
-                   sex sex, String mainAddress, systemRole systemRole, accountStatus accountStatus, List<Feedback> feedbacks, List<Order> orders) {
-        this.username = username;
-        this.password = password;
-        this.mainEmail = mainEmail;
-        this.fullName = fullName;
-        this.mainPhoneNumber = mainPhoneNumber;
-        this.birthDate = birth;
-        this.sex = sex;
-        this.mainAddress = mainAddress;
-        this.systemRole = systemRole;
-        this.accountStatus = accountStatus;
-        this.feedbacks = feedbacks;
-        this.orders = orders;
-    }
-
 }

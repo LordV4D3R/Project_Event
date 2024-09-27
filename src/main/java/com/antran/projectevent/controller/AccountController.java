@@ -1,7 +1,8 @@
 package com.antran.projectevent.controller;
 
+import com.antran.projectevent.dto.LoginRequest;
 import com.antran.projectevent.model.Account;
-import com.antran.projectevent.service.AccountService;
+import com.antran.projectevent.service.interfaceservice.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
 public class AccountController {
 
     @Autowired
-    private AccountService accountService;
+    private IAccountService accountService;
 
     //Get all users
     @GetMapping
@@ -43,6 +44,12 @@ public class AccountController {
     @DeleteMapping("/{id}")
     public void deleteAccountById(@PathVariable UUID id) {
         accountService.deleteAccountById(id);
+    }
+
+    //Login
+    @PostMapping("/login")
+    public Account login(@RequestBody LoginRequest loginRequest) {
+        return accountService.login(loginRequest.getUsername(), loginRequest.getPassword());
     }
 
 }
