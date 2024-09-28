@@ -1,10 +1,15 @@
 package com.antran.projectevent.service;
 
+import com.antran.projectevent.dto.LoginRequest;
+import com.antran.projectevent.dto.RegisterRequest;
+import com.antran.projectevent.dto.TokenResponse;
 import com.antran.projectevent.exception.ResourceNotFoundException;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.repository.AccountRepository;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
+import com.antran.projectevent.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +21,12 @@ public class AccountService implements IAccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     //Get all accounts
     public List<Account> getAllAccounts() {
@@ -59,22 +70,29 @@ public class AccountService implements IAccountService {
     }
 
     //Login
-    public Account login(String identifier, String password) {
-        Optional<Account> accountOpt = accountRepository.findByUsername(identifier);
+    public TokenResponse login(LoginRequest loginRequest) {
+        Optional<Account> accountOpt = accountRepository.findByUsername(loginRequest.getIdentifier());
         if (!accountOpt.isPresent()) {
-            accountOpt = accountRepository.findByEmail(identifier);
+            accountOpt = accountRepository.findByEmail(loginRequest.getIdentifier());
         }
-        if (accountOpt.isPresent() && accountOpt.get().getPassword().equals(password)) {
-            return accountOpt.get();
+        if (accountOpt.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), accountOpt.get().getPassword())) {
+            String accessToken = jwtUtil.generateToken(accountOpt.get().getUsername());
+            String refreshToken = jwtUtil.generateToken(accountOpt.get().getUsername()); // Simplified for example
+            return new TokenResponse(accessToken, refreshToken);
         } else {
             return null;
         }
     }
 
     //User registration
-    public Account register(Account account) {
-
+    public Account register(RegisterRequest registerRequest) {
+        Account account = new Account();
+        account.setUsername(registerRequest.getUsername());
+        account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        account.setMainEmail(registerRequest.getMainEmail());
         return accountRepository.save(account);
     }
+
+
 
 }

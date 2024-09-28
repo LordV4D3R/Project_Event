@@ -1,6 +1,8 @@
 package com.antran.projectevent.controller;
 
 import com.antran.projectevent.dto.LoginRequest;
+import com.antran.projectevent.dto.RegisterRequest;
+import com.antran.projectevent.dto.TokenResponse;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +50,14 @@ public class AccountController {
 
     //Login
     @PostMapping("/login")
-    public Account login(@RequestBody LoginRequest loginRequest) {
-        return accountService.login(loginRequest.getUsername(), loginRequest.getPassword());
+    public TokenResponse login(@RequestBody LoginRequest loginRequest) {
+        return accountService.login(loginRequest);
+    }
+
+    //Register
+    @PostMapping("/register")
+    public Account register(@RequestBody RegisterRequest registerRequest) {
+        return accountService.register(registerRequest);
     }
 
 }
