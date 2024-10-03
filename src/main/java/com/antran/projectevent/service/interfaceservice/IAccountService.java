@@ -15,5 +15,5 @@ public interface IAccountService {
     Account addAccount(Account account);
     void deleteAccountById(UUID id);
     TokenResponse login(LoginRequest loginRequest);
-    Account register(RegisterRequest registerRequest);
+//    Account register(RegisterRequest registerRequest);
 }

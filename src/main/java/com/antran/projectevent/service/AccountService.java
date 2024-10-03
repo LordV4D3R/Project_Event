@@ -9,7 +9,6 @@ import com.antran.projectevent.repository.AccountRepository;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
 import com.antran.projectevent.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,9 +23,6 @@ public class AccountService implements IAccountService {
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     //Get all accounts
     public List<Account> getAllAccounts() {
@@ -73,9 +69,9 @@ public class AccountService implements IAccountService {
     public TokenResponse login(LoginRequest loginRequest) {
         Optional<Account> accountOpt = accountRepository.findByUsername(loginRequest.getIdentifier());
         if (!accountOpt.isPresent()) {
-            accountOpt = accountRepository.findByEmail(loginRequest.getIdentifier());
+            accountOpt = accountRepository.findByMainEmail(loginRequest.getIdentifier());
         }
-        if (accountOpt.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), accountOpt.get().getPassword())) {
+        if (accountOpt.isPresent() && accountOpt.get().getPassword().equals(loginRequest.getPassword())) {
             String accessToken = jwtUtil.generateToken(accountOpt.get().getUsername());
             String refreshToken = jwtUtil.generateToken(accountOpt.get().getUsername()); // Simplified for example
             return new TokenResponse(accessToken, refreshToken);
@@ -85,13 +81,13 @@ public class AccountService implements IAccountService {
     }
 
     //User registration
-    public Account register(RegisterRequest registerRequest) {
-        Account account = new Account();
-        account.setUsername(registerRequest.getUsername());
-        account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        account.setMainEmail(registerRequest.getMainEmail());
-        return accountRepository.save(account);
-    }
+//    public Account register(RegisterRequest registerRequest) {
+//        Account account = new Account();
+//        account.setUsername(registerRequest.getUsername());
+//        account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+//        account.setMainEmail(registerRequest.getMainEmail());
+//        return accountRepository.save(account);
+//    }
 
 
 

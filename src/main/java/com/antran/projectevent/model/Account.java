@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +28,7 @@ public class Account {
     private String mainEmail;
     private String fullName;
     private String mainPhoneNumber;
-    private LocalDate birthDate;
+    private LocalDateTime birthDate;
     private sex sex;
     private String mainAddress;
 

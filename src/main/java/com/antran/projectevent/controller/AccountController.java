@@ -6,6 +6,8 @@ import com.antran.projectevent.dto.TokenResponse;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -50,14 +52,20 @@ public class AccountController {
 
     //Login
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody LoginRequest loginRequest) {
-        return accountService.login(loginRequest);
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+    TokenResponse tokenResponse = accountService.login(loginRequest);
+
+    if (tokenResponse == null) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    return ResponseEntity.ok(tokenResponse);
     }
 
     //Register
-    @PostMapping("/register")
-    public Account register(@RequestBody RegisterRequest registerRequest) {
-        return accountService.register(registerRequest);
-    }
+//    @PostMapping("/register")
+//    public Account register(@RequestBody RegisterRequest registerRequest) {
+//        return accountService.register(registerRequest);
+//    }
 
 }
