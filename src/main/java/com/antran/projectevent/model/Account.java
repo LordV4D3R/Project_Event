@@ -1,11 +1,12 @@
 package com.antran.projectevent.model;
 
+import com.antran.projectevent.constant.enums.AccountRole;
+import com.antran.projectevent.constant.enums.AccountStatus;
+import com.antran.projectevent.constant.enums.Sex;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,24 +30,17 @@ public class Account {
     private String fullName;
     private String mainPhoneNumber;
     private LocalDateTime birthDate;
-    private sex sex;
+
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
+
     private String mainAddress;
 
-    private systemRole systemRole;
-    private accountStatus accountStatus;
+    @Enumerated(EnumType.STRING)
+    private AccountRole accountRole;
 
-    public enum systemRole {
-        ADMIN,
-        MEMBER
-    }
-    public enum accountStatus {
-        ACTIVE,
-        INACTIVE
-    }
-    public enum sex {
-        MALE,
-        FEMALE,
-        OTHER
-    }
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatus;
+
 
 }
