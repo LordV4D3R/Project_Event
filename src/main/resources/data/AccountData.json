@@ -10,7 +10,7 @@
     "birthDate": "2023-10-01T10:00:00",
     "sex": "MALE",
     "mainAddress": "123 Washiton",
-    "systemRole": "ADMIN",
+    "accountRole": "ADMIN",
     "accountStatus": "ACTIVE"
   },
   {
@@ -24,7 +24,7 @@
     "birthDate": "2023-10-01T10:00:00",
     "sex": "MALE",
     "mainAddress": "123 Washiton",
-    "systemRole": "MEMBER",
+    "accountRole": "MEMBER",
     "accountStatus": "ACTIVE"
   }
 ]

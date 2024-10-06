@@ -1,8 +1,10 @@
 package com.antran.projectevent.controller;
 
+import com.antran.projectevent.constant.common.AppConstants;
 import com.antran.projectevent.dto.LoginRequest;
 import com.antran.projectevent.dto.RegisterRequest;
 import com.antran.projectevent.dto.TokenResponse;
+import com.antran.projectevent.exception.ResourceNotFoundException;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -28,8 +31,10 @@ public class AccountController {
 
     //Get user by id
     @GetMapping("/{id}")
-    public Account getAccountById(@PathVariable UUID id) {
-        return accountService.getAccountById(id);
+    public ResponseEntity<Object> getAccountById(@PathVariable UUID id) {
+        Optional<Account> account = accountService.getAccountById(id);
+        return account.<ResponseEntity<Object>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).body("Account not found"));
     }
 
     //Add new user
