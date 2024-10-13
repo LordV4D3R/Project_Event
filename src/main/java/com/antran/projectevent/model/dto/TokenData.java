@@ -1,4 +1,4 @@
-package com.antran.projectevent.dto;
+package com.antran.projectevent.model.dto;
 
 import com.antran.projectevent.constant.enums.AccountRole;
 import lombok.Data;

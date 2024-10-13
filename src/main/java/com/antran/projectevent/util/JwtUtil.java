@@ -1,6 +1,6 @@
 package com.antran.projectevent.util;
 
-import com.antran.projectevent.dto.TokenData;
+import com.antran.projectevent.model.dto.TokenData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
