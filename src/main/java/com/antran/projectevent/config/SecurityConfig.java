@@ -34,12 +34,10 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req -> req
-                                .requestMatchers("/**")
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
+                    req -> req
+                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/api/auth/**").permitAll() // Cho phép truy cập Swagger
+                            .requestMatchers("/api/accounts").authenticated() // Các request khác yêu cầu xác thực
+            )
                 .userDetailsService(authenticationService)
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();

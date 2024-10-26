@@ -1,5 +1,6 @@
 package com.antran.projectevent.util;
 
+import com.antran.projectevent.model.Account;
 import com.antran.projectevent.model.dto.TokenData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -60,4 +61,5 @@ public class JwtUtil {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
+
 }

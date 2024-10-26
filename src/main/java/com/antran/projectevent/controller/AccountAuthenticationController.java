@@ -1,5 +1,7 @@
 package com.antran.projectevent.controller;
 
+import com.antran.projectevent.constant.common.BusinessResult;
+import com.antran.projectevent.model.Account;
 import com.antran.projectevent.model.dto.LoginRequest;
 import com.antran.projectevent.model.dto.RegisterRequest;
 import com.antran.projectevent.model.dto.TokenResponse;
@@ -19,17 +21,32 @@ public class AccountAuthenticationController {
 
 
     //Login
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+//        try {
+//            TokenResponse tokenResponse = authenticationService.login(loginRequest);
+//            return ResponseEntity.ok(tokenResponse);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+//        }
+//    }
+
+    //Login
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            TokenResponse tokenResponse = authenticationService.login(loginRequest);
-            return ResponseEntity.ok(tokenResponse);
+            BusinessResult<TokenResponse> result = authenticationService.login(loginRequest);
+            if (result.getStatusCode() > 0) {
+                return ResponseEntity.ok(result.getData());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getMessage());
+            }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-        //Register
+    //Register
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest) {
         try {

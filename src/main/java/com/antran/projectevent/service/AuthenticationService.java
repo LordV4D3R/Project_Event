@@ -1,5 +1,7 @@
 package com.antran.projectevent.service;
 
+import com.antran.projectevent.constant.common.AppConstants;
+import com.antran.projectevent.constant.common.BusinessResult;
 import com.antran.projectevent.constant.enums.AccountRole;
 import com.antran.projectevent.constant.enums.AccountStatus;
 import com.antran.projectevent.exception.ResourceNotFoundException;
@@ -34,13 +36,13 @@ public class AuthenticationService implements IAuthenticationService, UserDetail
     PasswordEncoder passwordEncoder;
 
     //User login
-        public TokenResponse login(LoginRequest loginRequest){
+        public BusinessResult<TokenResponse> login(LoginRequest loginRequest){
         try {
             Optional<Account> accountOpt = accountRepository.findByUsername(loginRequest.getIdentifier());
             if (!accountOpt.isPresent()) {
                 accountOpt = accountRepository.findByMainEmail(loginRequest.getIdentifier());
             }
-            if (accountOpt.isPresent() && accountOpt.get().getPassword().equals(loginRequest.getPassword())) {
+            if (accountOpt.isPresent() && passwordEncoder.matches(loginRequest.getPassword(), accountOpt.get().getPassword())) {
                 TokenData tokenResponse = new TokenData();
                 tokenResponse.setAccountRole(accountOpt.get().getAccountRole());
                 tokenResponse.setFullName(accountOpt.get().getFullName());
@@ -48,12 +50,12 @@ public class AuthenticationService implements IAuthenticationService, UserDetail
 
                 String accessToken = jwtUtil.generateToken(tokenResponse, 1000 * 60 * 60 * 10);
                 String refreshToken = jwtUtil.generateToken(tokenResponse, 1000 * 60 * 60 * 60); // Simplified for example
-                return new TokenResponse(accessToken, refreshToken);
+                return new BusinessResult(AppConstants.SUCCESS_CODE, "Login " + AppConstants.SUCCESS_MESSAGE, new TokenResponse(accessToken, refreshToken));
             } else {
-                return null;
+                return new BusinessResult(AppConstants.FAIL_CODE, "Invalid username or password " + AppConstants.FAIL_MESSAGE, null);
             }
         } catch (Exception e) {
-            throw new ResourceNotFoundException("Account not found");
+            return new BusinessResult(AppConstants.FAIL_CODE, "Login Auth Service " + e.getMessage());
         }
     }
         //User registration
