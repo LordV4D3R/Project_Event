@@ -1,8 +1,10 @@
 package com.antran.projectevent.controller;
 
+import com.antran.projectevent.constant.common.BusinessResult;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,21 @@ public class AccountController {
 
     //Get all users
     @GetMapping
-    public List<Account> getAllAccounts() {
-        return accountService.getAllAccounts();
+    public ResponseEntity<?> getUsers(@RequestParam(required = false) String search) {
+        try {
+            BusinessResult<List<Account>> result = accountService.getAllAccounts(search);
+
+            if (result.getStatusCode() > 0) {
+                // Trả về danh sách User với mã trạng thái HTTP 200 (OK)
+                return ResponseEntity.ok(result.getData());
+            } else {
+                // Trả về thông báo Not Found nếu không có dữ liệu
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result.getMessage());
+            }
+        } catch (Exception e) {
+            // Trả về mã trạng thái HTTP 400 (Bad Request) nếu xảy ra lỗi
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     //Get user by id

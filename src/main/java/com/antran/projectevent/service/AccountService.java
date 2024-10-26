@@ -1,16 +1,19 @@
 package com.antran.projectevent.service;
 
 
+import com.antran.projectevent.constant.common.AppConstants;
+import com.antran.projectevent.constant.common.BusinessResult;
 import com.antran.projectevent.exception.ResourceNotFoundException;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.repository.AccountRepository;
 import com.antran.projectevent.service.interfaceservice.IAccountService;
+import org.apache.tomcat.util.bcel.Const;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class AccountService implements IAccountService {
@@ -21,9 +24,22 @@ public class AccountService implements IAccountService {
 
 
     //Get all accounts
-    public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
+    public BusinessResult<List<Account>> getAllAccounts(String emailPart) {
+        try {
+
+            List<Account> accounts;
+            if (emailPart != null && !emailPart.isEmpty()) {
+                accounts = accountRepository.findAccountByMainEmailContaining(emailPart).get();
+            } else {
+                accounts = accountRepository.findAll();
+            }
+            if (accounts.isEmpty()) return new BusinessResult<>(AppConstants.FAIL_GET_CODE, AppConstants.FAIL_GET_MESSAGE, accounts);
+            return new BusinessResult<>(AppConstants.SUCCESS_GET_CODE, AppConstants.SUCCESS_GET_MESSAGE, accounts);
+        } catch (Exception e) {
+            return new BusinessResult<>(AppConstants.WARNING_CODE, AppConstants.WARNING_MESSAGE + e.getMessage());
+        }
     }
+
 
     // Lấy người dùng theo ID
     public Optional<Account> getAccountById(UUID id) {
