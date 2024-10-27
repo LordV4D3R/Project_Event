@@ -1,6 +1,8 @@
 package com.antran.projectevent.config;
 
+import com.antran.projectevent.constant.enums.AccountRole;
 import com.antran.projectevent.model.Account;
+import com.antran.projectevent.model.dto.TokenData;
 import com.antran.projectevent.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -33,6 +35,9 @@ public class Filter extends OncePerRequestFilter {
             "/api/auth/register"
     );
 
+    private final List<String> ADMIN_PERMISSON = List.of(
+            "/api/accounts"
+    );
     public boolean isPermitted(String uri) {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -41,41 +46,47 @@ public class Filter extends OncePerRequestFilter {
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        boolean isPermitted = isPermitted(request.getRequestURI());
+        String requestURI = request.getRequestURI();
+        boolean isPermitted = isPermitted(requestURI);
+
         if (isPermitted) {
             filterChain.doFilter(request, response);
         } else {
             String token = getToken(request);
             if (token == null) {
-                // Unauthorized
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Missing or invalid Authorization header.");
                 return;
             }
+
+            TokenData tokenData = jwtUtil.extractTokenData(token);
+
             try {
-                String userName = jwtUtil.extractUsername(token);
-                if (jwtUtil.validateToken(token, userName)) {
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(userName, null, List.of());
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    // Authorized
-                    filterChain.doFilter(request, response);
+                if (jwtUtil.validateToken(token)) {
+                    AccountRole role = jwtUtil.extractRole(token);
+                    if (AccountRole.ADMIN.equals(role) || (AccountRole.MEMBER.equals(role) && !ADMIN_PERMISSON.contains(requestURI))) {
+                        UsernamePasswordAuthenticationToken authenticationToken =
+                                new UsernamePasswordAuthenticationToken(tokenData, null, List.of());
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        filterChain.doFilter(request, response);
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                        response.getWriter().write("Access denied.");
+                    }
                 } else {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid or expired token.");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Invalid or expired token.");
                 }
             } catch (ExpiredJwtException e) {
-                // Token expired
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Token expired");
             } catch (MalformedInputException | IllegalIdentifierException e) {
-                // Invalid token
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Invalid token");
             }
-
         }
     }
+
 
     public String getToken(HttpServletRequest request) {
         String header = request.getHeader("Authorization");

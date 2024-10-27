@@ -1,5 +1,6 @@
 package com.antran.projectevent.util;
 
+import com.antran.projectevent.constant.enums.AccountRole;
 import com.antran.projectevent.model.Account;
 import com.antran.projectevent.model.dto.TokenData;
 import io.jsonwebtoken.Claims;
@@ -19,9 +20,22 @@ public class JwtUtil {
 
     private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String extractUsername(String token) {
+    public String extractFullName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+    public AccountRole extractRole(String token) {
+        return AccountRole.valueOf(extractClaim(token, claims -> claims.get("role", String.class)));
+    }
+
+    public TokenData extractTokenData(String token) {
+        TokenData tokenData = new TokenData();
+        tokenData.setAccountRole(extractRole(token));
+        tokenData.setUsername(extractClaim(token, Claims::getSubject));
+        tokenData.setFullName(extractClaim(token, claims -> claims.get("fullName", String.class)));
+        return tokenData;
+    }
+
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -57,9 +71,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    public Boolean validateToken(String token) {
+        return (!isTokenExpired(token));
     }
 
 }
